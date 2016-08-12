@@ -16,4 +16,13 @@ async function spinTitle (driver) {
   return title;
 }
 
-export { spinTitle, GUINEA_PIG_PAGE };
+async function spinTitleEquals (driver, expectedTitle, tries = 90) {
+  await retry(tries, async () => {
+    let title = await spinTitle(driver);
+    if (title !== expectedTitle) {
+      throw new Error(`Could not find expected title. Found: '${title}'`);
+    }
+  });
+}
+
+export { spinTitle, spinTitleEquals, GUINEA_PIG_PAGE };
