@@ -10,17 +10,20 @@ import { initSession, deleteSession } from '../helpers/session';
 chai.should();
 chai.use(chaiAsPromised);
 
-describe('XCUITestDriver - find', function () {
+describe.skip('XCUITestDriver - find', function () {
   this.timeout(200 * 1000);
 
   let driver;
   before(async () => {
     driver = await initSession(TESTAPP_CAPS);
+    driver.setImplicitWaitTimeout(10000);
   });
   after(deleteSession);
 
   describe('by id', () => {
     it('should find a single element by id', async () => {
+      let src = await driver.source();
+      console.log('\n\n', src); // eslint-disable-line no-console
       let el = await driver.elementById('ComputeSumButton');
       el.should.exist;
     });
