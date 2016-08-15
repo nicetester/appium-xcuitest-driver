@@ -25,4 +25,20 @@ async function spinTitleEquals (driver, expectedTitle, tries = 90) {
   });
 }
 
-export { spinTitle, spinTitleEquals, GUINEA_PIG_PAGE };
+async function spinWait (fn, waitMs = 10000, intMs = 500) {
+  let end = Date.now() + waitMs;
+  let spin = async () => {
+    try {
+      await fn();
+    } catch (err) {
+      if (Date.now() > end) {
+        throw new Error(`Condition unfulfilled. Error: ${err}`);
+      }
+
+      return setTimeout(async () => await spin(), intMs);
+    }
+  };
+  await spin();
+}
+
+export { spinTitle, spinTitleEquals, spinWait, GUINEA_PIG_PAGE };
