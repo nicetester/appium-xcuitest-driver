@@ -3,6 +3,7 @@ import { HOST, PORT } from '../helpers/session';
 
 
 const GUINEA_PIG_PAGE = `http://${HOST}:${PORT}/test/guinea-pig`;
+const GUINEA_PIG_IFRAME_PAGE = `http://${HOST}:${PORT}/test/iframes.html`;
 
 async function spinTitle (driver) {
   let title = await retry(10, async () => {
@@ -41,4 +42,5 @@ async function spinWait (fn, waitMs = 10000, intMs = 500) {
   await spin();
 }
 
-export { spinTitle, spinTitleEquals, spinWait, GUINEA_PIG_PAGE };
+export { spinTitle, spinTitleEquals, spinWait, GUINEA_PIG_PAGE,
+         GUINEA_PIG_IFRAME_PAGE};

@@ -32,6 +32,8 @@ describe('Safari', function () {
   });
 
   after(async () => {
+    await killAllSimulators();
+
     await server.close();
   });
 
@@ -257,43 +259,42 @@ describe('Safari', function () {
           (await el.getText()).should.be.equal('Your comments: This is a comment');
         });
       });
-    //   it('should return true when the element is displayed', async () => {
-    //     let el = await driver.findElement('link text', 'i am a link');
-    //     (await driver.elementDisplayed(el)).should.be.ok;
-    //   });
-    //
-    //   it('should return false when the element is not displayed', async () => {
-    //     let el = await driver.findElement('id', 'invisible div');
-    //     (await driver.elementDisplayed(el)).should.not.be.ok;
-    //   });
-    //
-    //   it('should return true when the element is enabled', async () => {
-    //     let el = await driver.findElement('link text', 'i am a link');
-    //     (await driver.elementEnabled(el)).should.be.ok;
-    //   });
-    //
-    //   it('should return false when the element is not enabled', async () => {
-    //     let el = await driver.findElement('id', 'fbemail');
-    //     await driver.execute(`$('#fbemail').attr('disabled', 'disabled');`);
-    //     (await driver.elementEnabled(el)).should.not.be.ok;
-    //   });
+      it('should return true when the element is displayed', async () => {
+        let el = await driver.elementByLinkText('i am a link');
+        (await el.isDisplayed()).should.be.ok;
+      });
+      it('should return false when the element is not displayed', async () => {
+        let el = await driver.elementById('invisible div');
+        (await el.isDisplayed()).should.not.be.ok;
+      });
+      it('should return true when the element is enabled', async () => {
+        let el = await driver.elementByLinkText('i am a link');
+        (await el.isEnabled()).should.be.ok;
+      });
+      it('should return false when the element is not enabled', async () => {
+        let el = await driver.elementById('fbemail');
+        await driver.execute(`$('#fbemail').attr('disabled', 'disabled');`);
+        (await el.isEnabled()).should.not.be.ok;
+      });
+      it('should return the active element', async () => {
+        let testText = 'hi there';
+        let el = await driver.elementById('i_am_a_textbox');
+        await el.sendKeys(testText);
+        let activeEl = await driver.active();
+        (await activeEl.getAttribute('value')).should.be.equal(testText);
+      });
+      it('should properly navigate to anchor', async () => {
+        let el = await driver.elementByLinkText('i am an anchor link');
+        await el.click();
 
-      // it('should return the active element', async () => {
-      //   var testText = 'hi there';
-      //   let el = await driver.findElement('id', 'i_am_a_textbox');
-      //   await driver.setValue(testText, el);
-      //   let activeEl = await driver.active();
-      //   (await driver.getAttribute('value', activeEl)).should.be.equal(testText);
-      // });
-      //
-      // it('should properly navigate to anchor', async () => {
-      //   let curl = await driver.getUrl();
-      //   await driver.setUrl(curl);
-      // });
-      //
-      // it('should be able to refresh', async () => {
-      //   await driver.refresh();
-      // });
+        let url = await driver.url();
+        await driver.get(url);
+
+        (await driver.url()).should.include('#anchor');
+      });
+      it('should be able to refresh', async () => {
+        await driver.refresh();
+      });
     });
   });
 });
