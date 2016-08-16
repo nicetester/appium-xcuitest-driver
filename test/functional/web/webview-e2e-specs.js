@@ -1,9 +1,9 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import _ from 'lodash';
-import { killAllSimulators } from 'appium-ios-simulator';
-import { UICATALOG_CAPS } from '../desired';
-import { initDriver, deleteSession, HOST, PORT } from '../helpers/session';
+import { WEBVIEW_CAPS } from '../desired';
+import { initSession, deleteSession } from '../helpers/session';
+import { GUINEA_PIG_PAGE } from './helpers';
 
 
 chai.should();
@@ -14,21 +14,9 @@ describe('Webview', function () {
 
   let driver;
   before(async () => {
-    driver = await initDriver();
+    driver = await initSession(WEBVIEW_CAPS);
   });
   after(deleteSession);
-
-  beforeEach(async () => {
-    await killAllSimulators();
-    
-    await driver.init(UICATALOG_CAPS);
-    let el = await driver.elementByAccessibilityId('Web View');
-    await driver.execute('mobile: scroll', {element: el, toVisible: true});
-    await el.click();
-  });
-  afterEach(async () => {
-    await driver.quit();
-  });
 
   it('should start a session, navigate to url, get title', async () => {
     let contexts = await driver.contexts();
@@ -36,7 +24,7 @@ describe('Webview', function () {
 
     let urlBar = await driver.elementByClassName('XCUIElementTypeTextField');
     await urlBar.clear();
-    await urlBar.sendKeys(`http://${HOST}:${PORT}/test/guinea-pig`);
+    await urlBar.sendKeys(GUINEA_PIG_PAGE);
 
     let buttons = await driver.elementsByClassName('XCUIElementTypeButton');
     await _.last(buttons).click();

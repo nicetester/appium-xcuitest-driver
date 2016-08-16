@@ -75,7 +75,7 @@ describe('safari - execute', function () {
     });
   });
 
-  describe.skip('asynchronous', function () {
+  describe('asynchronous', function () {
     it('should bubble up javascript errors', async () => {
       await driver.execute(`'nan'--`).should.eventually.be.rejected;
     });
